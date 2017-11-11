@@ -8,7 +8,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.post('/users/signup', async (req, res) => {
+app.post('/api/users/signup', async (req, res) => {
   try {
     const body = _.pick(req.body, ['email', 'password']);
     const user = new User(body);
@@ -18,6 +18,16 @@ app.post('/users/signup', async (req, res) => {
     res.status(400).send(e);
   }
 });
+
+app.get('/api/users/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId);
+    res.send(user);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+})
 
 app.listen(PORT, () => {
   console.log(`App started on http://localhost:${PORT}`);
