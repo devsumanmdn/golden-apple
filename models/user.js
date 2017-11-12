@@ -9,9 +9,17 @@ const UserSchema = new Schema({
     unique: true,
     minlength: 1,
     validate: {
-      validator: validator.isEmail,
+      validator: value => validator.isEmail(value),
       message: '{VALUE} is not a valid email'
     }
+  },
+  username: {
+    type: String,
+    unique: true,
+    minlength: 1
+  },
+  bio: {
+    type: String
   },
   name: {
     type: String
