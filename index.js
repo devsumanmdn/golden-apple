@@ -19,6 +19,22 @@ app.post('/api/users/signup', async (req, res) => {
   }
 });
 
+app.get('/api/dynamic/:schemaProp/:propValue', async (req, res) => {
+  try {
+    let {
+      schemaProp,
+      propValue
+    } = req.params;
+    let user = await User.findOne({
+      [schemaProp]: propValue
+    });
+    res.send(user);
+  } catch (e) {
+    res.send(e);
+  }
+
+})
+
 app.get('/api/users/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
