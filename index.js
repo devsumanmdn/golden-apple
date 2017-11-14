@@ -19,31 +19,35 @@ app.post('/api/users/signup', async (req, res) => {
   }
 });
 
-app.get('/api/dynamic/:schemaProp/:propValue', async (req, res) => {
+app.get('/api/users/query', async (req, res) => {
   try {
-    let {
-      schemaProp,
-      propValue
-    } = req.params;
+    let { prop, value } = req.query;
     let user = await User.findOne({
-      [schemaProp]: propValue
+      [prop]: value
     });
-    res.send(user);
+    if (!user) {
+      throw { error: 'User not fount' };
+    } else {
+      res.send(user);
+    }
   } catch (e) {
-    res.send(e);
+    res.status(404).send(e);
   }
-
-})
+});
 
 app.get('/api/users/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
     const user = await User.findById(userId);
-    res.send(user);
+    if (!user) {
+      throw { error: 'User not fount' };
+    } else {
+      res.send(user);
+    }
   } catch (e) {
-    res.status(400).send(e);
+    res.status(404).send(e);
   }
-})
+});
 
 app.listen(PORT, () => {
   console.log(`App started on http://localhost:${PORT}`);
