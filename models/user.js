@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const validator = require('validator');
+const validator = require("validator");
 
 const UserSchema = new Schema({
   email: {
@@ -10,7 +10,7 @@ const UserSchema = new Schema({
     minlength: 1,
     validate: {
       validator: value => validator.isEmail(value),
-      message: '{VALUE} is not a valid email'
+      message: "{VALUE} is not a valid email"
     }
   },
   username: {
@@ -34,7 +34,7 @@ const UserSchema = new Schema({
     minlength: 10,
     validate: {
       validator: validator.isMobilePhone,
-      message: 'Sorry, {MOBILE} is not an indian mobile number.'
+      message: "Sorry, {MOBILE} is not an indian mobile number."
     }
   },
   tokens: [
@@ -51,6 +51,6 @@ const UserSchema = new Schema({
   ]
 });
 
-const User = mongoose.model('user', UserSchema);
+const User = mongoose.model("user", UserSchema);
 
 module.exports = User;
