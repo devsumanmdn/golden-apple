@@ -10,12 +10,12 @@ app.use(bodyParser.json());
 
 app.post('/api/users/signup', async (req, res) => {
   try {
-    const body = _.pick(req.body, ['email', 'password']);
+    const body = _.pick(req.body, ['email', 'password', 'username']);
     const user = new User(body);
     await user.save();
-    res.send(user);
+    res.send('done');
   } catch (e) {
-    res.status(404).send(e);
+    res.status(404).send('error');
   }
 });
 
@@ -23,18 +23,27 @@ app.get('/api/test', (req, res) => {
   res.send('working');
 });
 
-app.get('/api/users/query', async (req, res) => {
-  try {
-    let { prop, value } = req.query;
-    let user = await User.findOne({ [prop]: value });
-    if (!user) {
-      res.send(false);
-    } else {
-      res.send(true);
-    }
-  } catch (e) {
-    res.status(404).send('BAD REQUEST');
+app.post('api/users/login', (req, res) => {
+  const body = _.pick(req.body, ['email', 'password', 'username']);
+  if (username) {
+    User.findOne({ username: body.email }, '_id password', (err, data) => {
+      if (data.password === body.password) {
+        res.send('correct!');
+      } else if (data === null) {
+        res.send('incorrect username!');
+      } else {
+        res.send('incorrect password!!');
+      }
+    });
   }
+});
+
+app.post('/api/users/query', async (req, res) => {
+  let data = _.pick(req.body, ['name', 'value']);
+  User.findOne({ [data.name]: data.value }, 'email', function(err, user) {
+    if (err) return res.status(400).send('err');
+    user === null ? res.send(false) : res.send(data.name);
+  });
 });
 
 app.get('/api/users/:userId', async (req, res) => {

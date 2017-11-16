@@ -9,11 +9,15 @@ class App extends Component {
     this.state = {
       email: '',
       password: '',
+      username: '',
       errorMessage: '',
-      successMessage: ''
+      successMessage: '',
+      usernameExist: '',
+      emailExist: ''
     };
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.checkExistance = this.checkExistance.bind(this);
   }
 
   handleFormSubmit(event) {
@@ -21,11 +25,13 @@ class App extends Component {
     axios
       .post('/api/users/signup', {
         email: this.state.email,
-        password: this.state.password
+        password: this.state.password,
+        username: this.state.username
       })
       .then(res => {
+        console.log(res.data);
         this.setState({
-          successMessage: 'Hurray, user created!',
+          successMessage: res.data,
           errorMessage: ''
         });
       })
@@ -35,32 +41,98 @@ class App extends Component {
           successMessage: ''
         });
       });
-    this.setState({ email: '', password: '' });
+    this.setState({ email: '', password: '', username: '' });
   }
 
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
+
+    // check existance of email and username
+    if (event.target.name === 'email' || event.target.name === 'username') {
+      console.log({ [event.target.name + '_exist']: event.target.value });
+      this.setState({ emailExist: 's', usernameExist: 's' });
+      axios
+        .post('/api/users/query', {
+          name: event.target.name,
+          value: event.target.value
+        })
+        .then(res => {
+          if (res.data !== false) {
+            console.log(res.data);
+            if (res.data === 'email') {
+              this.setState({ emailExist: `exist_err` });
+            } else if (res.data === 'username') {
+              this.setState({ usernameExist: `exist_err` });
+            }
+          } else {
+            this.setState({ emailExist: '', usernameExist: '' });
+          }
+        })
+        .catch(e => {
+          console.log(e);
+          this.setState({
+            errorMessage: '',
+            successMessage: ''
+          });
+        });
+    }
   }
 
+  checkExistance(event) {}
   render() {
     return (
-      <div className="App">
-        <form onSubmit={this.handleFormSubmit}>
-          <input
-            name="email"
-            value={this.state.email}
-            onChange={this.handleInputChange}
-          />
-          <input
-            type="password"
-            name="password"
-            value={this.state.password}
-            onChange={this.handleInputChange}
-          />
-          <input type="submit" value="Signup" />
-        </form>
-        {this.state.errorMessage ? <p>{this.state.errorMessage}</p> : ''}
-        {this.state.successMessage ? <p>{this.state.successMessage}</p> : ''}
+      <div>
+        <header>
+          <img src={logo} alt="My logo" width="100" height="100" />
+        </header>
+        <div className="App">
+          <form onSubmit={this.handleFormSubmit}>
+            <input
+              name="email"
+              className={this.state.emailExist}
+              value={this.state.email}
+              onChange={this.handleInputChange}
+              onBlur={this.checkExistance}
+            />
+            <input
+              type="password"
+              name="password"
+              value={this.state.password}
+              onChange={this.handleInputChange}
+            />
+            <input
+              type="text"
+              className={this.state.usernameExist}
+              name="username"
+              value={this.state.username}
+              onChange={this.handleInputChange}
+              onBlur={this.checkExistance}
+            />
+            <input
+              type="submit"
+              value="Signup"
+              disabled={
+                this.state.emailExist !== '' || this.state.usernameExist !== ''
+              }
+            />
+          </form>
+          {this.state.errorMessage !== '' ? (
+            <p>{this.state.errorMessage}</p>
+          ) : (
+            ''
+          )}
+          {this.state.successMessage !== '' ? (
+            <p>{this.state.successMessage}</p>
+          ) : (
+            ''
+          )}
+          {this.state.emailExist !== '' ? <p>{this.state.emailExist}</p> : ''}
+          {this.state.usernameExist !== '' ? (
+            <p>{this.state.usernameExist}</p>
+          ) : (
+            ''
+          )}
+        </div>
       </div>
     );
   }
