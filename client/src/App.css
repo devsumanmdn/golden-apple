@@ -22,7 +22,30 @@
   font-size: large;
 }
 
+form {
+  text-align: center;
+  margin-left: calc(50% - 160px);
+  display: flex;
+  flex-wrap: wrap;
+  width: 300px;
+  height: auto;
+}
+
+input {
+  width: 280px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+input[type= 'submit'] {
+  width: 100px;
+}
+
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
