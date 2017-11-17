@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const User = require('./models/user');
 const { mongoose } = require('./config/config');
-const PORT = process.env.NODE_ENV || 5000;
+const PORT = process.env.PORT || 5000;
 const app = express();
 
 app.use(bodyParser.json());
@@ -40,7 +40,7 @@ app.post('api/users/login', (req, res) => {
 
 app.post('/api/users/query', async (req, res) => {
   let data = _.pick(req.body, ['name', 'value']);
-  User.findOne({ [data.name]: data.value }, 'email', function(err, user) {
+  User.findOne({ [data.name]: data.value }, 'email', function (err, user) {
     if (err) return res.status(400).send('err');
     user === null ? res.send(false) : res.send(data.name);
   });
