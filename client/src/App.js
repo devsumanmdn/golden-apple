@@ -45,12 +45,12 @@ class App extends Component {
   }
 
   handleInputChange(event) {
+    event.persist();
     this.setState({ [event.target.name]: event.target.value });
 
     // check existance of email and username
     if (event.target.name === 'email' || event.target.name === 'username') {
-      console.log({ [event.target.name + '_exist']: event.target.value });
-      this.setState({ emailExist: 's', usernameExist: 's' });
+      this.setState({ [event.target.name + 'Exist']: 's' });
       axios
         .post('/api/users/query', {
           name: event.target.name,
@@ -58,21 +58,15 @@ class App extends Component {
         })
         .then(res => {
           if (res.data !== false) {
-            console.log(res.data);
-            if (res.data === 'email') {
-              this.setState({ emailExist: `exist_err` });
-            } else if (res.data === 'username') {
-              this.setState({ usernameExist: `exist_err` });
-            }
+            this.setState({ [res.data + 'Exist']: `exist_err` });
           } else {
-            this.setState({ emailExist: '', usernameExist: '' });
+            this.setState({ [event.target.name + 'Exist']: '' });
           }
         })
         .catch(e => {
           console.log(e);
           this.setState({
-            errorMessage: '',
-            successMessage: ''
+            [event.target.name + 'Exist']: ''
           });
         });
     }
@@ -92,6 +86,7 @@ class App extends Component {
               className={this.state.emailExist}
               value={this.state.email}
               onChange={this.handleInputChange}
+              placeholder="Enter Your Email"
               onBlur={this.checkExistance}
             />
             <input
@@ -99,6 +94,7 @@ class App extends Component {
               name="password"
               value={this.state.password}
               onChange={this.handleInputChange}
+              placeholder="Password"
             />
             <input
               type="text"
@@ -107,6 +103,7 @@ class App extends Component {
               value={this.state.username}
               onChange={this.handleInputChange}
               onBlur={this.checkExistance}
+              placeholder="Choose Username"
             />
             <input
               type="submit"
