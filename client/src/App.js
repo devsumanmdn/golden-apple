@@ -46,6 +46,10 @@ class App extends Component {
 
   handleInputChange(event) {
     event.persist();
+    this.setState({
+      successMessage: ''
+    });
+
     this.setState({ [event.target.name]: event.target.value });
 
     // check existance of email and username
