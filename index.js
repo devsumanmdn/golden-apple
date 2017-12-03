@@ -3,7 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const User = require('./models/user')
 const { mongoose } = require('./config/config')
-const PORT = 3000
+const PORT = 5000
 const app = express()
 
 app.use(bodyParser.json())
