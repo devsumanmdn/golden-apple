@@ -1,0 +1,19 @@
+nav {
+  margin: 0px;
+  padding: 0px;
+}
+
+ul {
+  margin: 0px;
+  padding: 15px 20px;
+  display: flex;
+  list-style: none;
+}
+
+li {
+  padding: 0px 10px;
+}
+
+.brand {
+  margin-right: auto;
+}
