@@ -19,9 +19,9 @@ app.post('/api/users/signup', async (req, res) => {
   }
 })
 
-app.get('/api/users/query', async (req, res) => {
+app.post('/api/users/query', async (req, res) => {
   try {
-    let { prop, value } = req.query
+    let { prop, value } = req.body
     let user = await User.findOne({ [prop]: value })
     if (!user) {
       res.send(false)
