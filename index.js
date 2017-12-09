@@ -4,11 +4,13 @@ const bodyParser = require('body-parser')
 const User = require('./models/user')
 const { mongoose } = require('./config/config')
 const ev = require('email-validator')
+const path = require('path')
 
 const PORT = process.env.PORT || 5000
 const app = express()
 
 app.use(bodyParser.json())
+app.use(express.static('./client/build'))
 
 app.post('/api/users/signup', async (req, res) => {
   try {
@@ -86,6 +88,10 @@ app.get('/api/users/:userId', async (req, res) => {
   } catch (e) {
     res.status(404).send(e)
   }
+})
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
 })
 
 app.listen(PORT, () => {
