@@ -3,14 +3,12 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const User = require('./models/user')
 const { mongoose } = require('./config/config')
-const ev = require('email-validator')
-const path = require('path')
+const validator = require('validator')
 
 const PORT = process.env.PORT || 5000
 const app = express()
 
 app.use(bodyParser.json())
-app.use(express.static('./client/build'))
 
 app.post('/api/users/signup', async (req, res) => {
   try {
@@ -52,7 +50,7 @@ app.post('/api/users/login', async (req, res) => {
     let user
     const body = _.pick(req.body, ['uid', 'password'])
     let eoru = ''
-    if (ev.validate(body.uid)) {
+    if (validator.isEmail(body.uid)) {
       eoru = 'email'
     } else {
       eoru = 'username'
@@ -90,9 +88,14 @@ app.get('/api/users/:userId', async (req, res) => {
   }
 })
 
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
-})
+if (process.env.NODE_ENV === 'production') {
+  const path = require('path')
+
+  app.use(express.static('./client/build'))
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+  })
+}
 
 app.listen(PORT, () => {
   console.log(`App started on http://localhost:${PORT}`)
