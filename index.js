@@ -3,6 +3,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const User = require('./models/user')
 const { mongoose } = require('./config/config')
+const ev = require('email-validator')
+
 const PORT = process.env.PORT || 5000
 const app = express()
 
@@ -11,6 +13,8 @@ app.use(bodyParser.json())
 app.post('/api/users/signup', async (req, res) => {
   try {
     const body = _.pick(req.body, ['email', 'password', 'username'])
+    body.username = body.username.toLowerCase()
+    body.email = body.email.toLowerCase()
     const user = new User(body)
     user.generateAuthToken()
     if (user.token) {
@@ -28,11 +32,13 @@ app.post('/api/users/signup', async (req, res) => {
 app.post('/api/users/query', async (req, res) => {
   try {
     let { prop, value } = req.body
-    let user = await User.findOne({ [prop]: value })
+    let user = await User.findOne({ [prop]: value }, prop)
     if (!user) {
-      res.send({ [prop]: false })
-    } else {
-      res.send({ [prop]: true })
+      res.send('false')
+    } else if (user.email) {
+      res.send('email')
+    } else if (user.username) {
+      res.send('username')
     }
   } catch (e) {
     res.status(404).send('BAD REQUEST')
@@ -42,15 +48,18 @@ app.post('/api/users/query', async (req, res) => {
 app.post('/api/users/login', async (req, res) => {
   try {
     let user
-    const body = _.pick(req.body, ['email', 'password', 'username'])
-    if (body.username) {
-      user = await User.findByCredentials(
-        'username',
-        body.username,
-        body.password
-      )
+    const body = _.pick(req.body, ['uid', 'password'])
+    let eoru = ''
+    if (ev.validate(body.uid)) {
+      eoru = 'email'
     } else {
-      user = await User.findByCredentials('email', body.email, body.password)
+      eoru = 'username'
+    }
+
+    if (eoru === 'username') {
+      user = await User.findByCredentials('username', body.uid, body.password)
+    } else if (eoru === 'email') {
+      user = await User.findByCredentials('email', body.uid, body.password)
     }
     if (user) {
       const token = await user.generateAuthToken()

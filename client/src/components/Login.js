@@ -5,7 +5,11 @@ import axios from 'axios'
 class Login extends Component {
   constructor(props) {
     super(props)
-    this.state = { email: '', password: '', loginMessage: '' }
+    this.state = {
+      uid: '',
+      password: '',
+      loginMessage: ''
+    }
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
   }
@@ -16,9 +20,10 @@ class Login extends Component {
 
   handleFormSubmit(event) {
     event.preventDefault()
+
     axios
       .post('/api/users/login', {
-        email: this.state.email,
+        uid: this.state.uid,
         password: this.state.password
       })
       .then(res => {
@@ -30,19 +35,21 @@ class Login extends Component {
           this.setState({ loginMessage: 'Login: failed!' })
         }
       })
-    this.setState({ email: '', password: '' })
+    this.setState({ password: '' })
   }
 
   render() {
     return (
       <div>
         <form onSubmit={this.handleFormSubmit}>
+          <p className="form-title">Login</p>
           <input
-            type="email"
-            name="email"
-            placeholder="email"
+            type="text"
+            name="uid"
+            placeholder="Email or Username"
             onChange={this.handleInputChange}
             value={this.state.email}
+            required
           />
           <input
             type="password"
@@ -50,6 +57,7 @@ class Login extends Component {
             placeholder="password"
             onChange={this.handleInputChange}
             value={this.state.password}
+            required
           />
           <input type="submit" value="Submit" />
         </form>

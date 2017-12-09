@@ -48,6 +48,9 @@ class SignupForm extends Component {
     this.setState({
       successMessage: ''
     })
+    if (event.target.name === 'email' || event.target.name === 'username') {
+      event.target.value = event.target.value.toLowerCase()
+    }
 
     this.setState({ [event.target.name]: event.target.value })
 
@@ -61,10 +64,8 @@ class SignupForm extends Component {
         })
         .then(res => {
           console.log(res.data)
-          if (res.data.email) {
-            this.setState({ emailExist: `exist_err` })
-          } else if (res.data.username) {
-            this.setState({ usernameExist: `exist_err` })
+          if (res.data !== false) {
+            this.setState({ [res.data + 'Exist']: `exist_err` })
           } else {
             this.setState({ [event.target.name + 'Exist']: '' })
           }
@@ -81,8 +82,9 @@ class SignupForm extends Component {
   checkExistance(event) {}
   render() {
     return (
-      <div className="LoginForm">
+      <div className="SignupForm">
         <form onSubmit={this.handleFormSubmit}>
+          <p className="form-title">Sign Up</p>
           <input
             name="email"
             className={this.state.emailExist}
@@ -90,6 +92,7 @@ class SignupForm extends Component {
             onChange={this.handleInputChange}
             placeholder="Enter Your Email"
             onBlur={this.checkExistance}
+            required
           />
           <input
             type="password"
@@ -97,6 +100,7 @@ class SignupForm extends Component {
             value={this.state.password}
             onChange={this.handleInputChange}
             placeholder="Password"
+            required
           />
           <input
             type="text"
@@ -106,6 +110,7 @@ class SignupForm extends Component {
             onChange={this.handleInputChange}
             onBlur={this.checkExistance}
             placeholder="Choose Username"
+            required
           />
           <input
             type="submit"
@@ -121,9 +126,13 @@ class SignupForm extends Component {
         ) : (
           ''
         )}
-        {this.state.emailExist !== '' ? <p>{this.state.emailExist}</p> : ''}
-        {this.state.usernameExist !== '' ? (
-          <p>{this.state.usernameExist}</p>
+        {this.state.emailExist === 'exist_err' ? (
+          <p>Email Already Registered! Try Login</p>
+        ) : (
+          ''
+        )}
+        {this.state.usernameExist === 'exist_err' ? (
+          <p>Username Already Taken! </p>
         ) : (
           ''
         )}

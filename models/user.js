@@ -6,52 +6,55 @@ const jwt = require('jsonwebtoken')
 const Schema = mongoose.Schema
 const validator = require('validator')
 
-const UserSchema = new Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    minlength: 1,
-    validate: {
-      validator: value => validator.isEmail(value),
-      message: '{VALUE} is not a valid email'
-    }
-  },
-  username: {
-    type: String,
-    unique: true,
-    minlength: 1
-  },
-  bio: {
-    type: String
-  },
-  name: {
-    type: String
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 6
-  },
-  phone: {
-    type: String,
-    minlength: 10,
-    validate: {
-      validator: validator.isMobilePhone,
-      message: 'Sorry, {MOBILE} is not an indian mobile number.'
-    }
-  },
-  tokens: [
-    {
-      access: {
-        type: String
-      },
-      token: {
-        type: String
+const UserSchema = new Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      minlength: 1,
+      validate: {
+        validator: value => validator.isEmail(value),
+        message: '{VALUE} is not a valid email'
       }
-    }
-  ]
-})
+    },
+    username: {
+      type: String,
+      unique: true,
+      minlength: 1
+    },
+    bio: {
+      type: String
+    },
+    name: {
+      type: String
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 6
+    },
+    phone: {
+      type: String,
+      minlength: 10,
+      validate: {
+        validator: validator.isMobilePhone,
+        message: 'Sorry, {MOBILE} is not an indian mobile number.'
+      }
+    },
+    tokens: [
+      {
+        access: {
+          type: String
+        },
+        token: {
+          type: String
+        }
+      }
+    ]
+  },
+  { usePushEach: true }
+)
 
 UserSchema.methods.toJSON = function() {
   const user = this
