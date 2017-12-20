@@ -4,15 +4,17 @@
   "description": "",
   "main": "index.js",
   "engines": {
-    "node": "8.9.1",
-    "npm": "5.5.1"
+    "node": "8.9.3",
+    "npm": "5.6.0"
   },
   "scripts": {
     "start": "node index.js",
     "server": "nodemon index.js",
     "client": "npm run start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "deploy": "npm run build --prefix client && npm run server",
+    "heroku-postbuild":
+      "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "keywords": [],
   "author": "",

@@ -1,14 +1,17 @@
+//@ts-check
 const _ = require('lodash')
 const express = require('express')
 const bodyParser = require('body-parser')
 const User = require('./models/user')
 const { mongoose } = require('./config/config')
-const ev = require('email-validator')
+const validator = require('validator')
+const path = require('path')
 
 const PORT = process.env.PORT || 5000
 const app = express()
 
 app.use(bodyParser.json())
+app.use(express.static('./client/build'))
 
 app.post('/api/users/signup', async (req, res) => {
   try {
@@ -16,8 +19,8 @@ app.post('/api/users/signup', async (req, res) => {
     body.username = body.username.toLowerCase()
     body.email = body.email.toLowerCase()
     const user = new User(body)
-    user.generateAuthToken()
-    if (user.token) {
+    const token = user.generateAuthToken()
+    if (token) {
       await user.save()
       res.header('x-auth', token).send(user)
     } else {
@@ -50,7 +53,7 @@ app.post('/api/users/login', async (req, res) => {
     let user
     const body = _.pick(req.body, ['uid', 'password'])
     let eoru = ''
-    if (ev.validate(body.uid)) {
+    if (validator.isEmail(body.uid)) {
       eoru = 'email'
     } else {
       eoru = 'username'
@@ -86,6 +89,10 @@ app.get('/api/users/:userId', async (req, res) => {
   } catch (e) {
     res.status(404).send(e)
   }
+})
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
 })
 
 app.listen(PORT, () => {

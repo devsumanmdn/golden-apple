@@ -28,11 +28,11 @@ class Login extends Component {
       })
       .then(res => {
         console.log(res)
-        this.setState({ loginMessage: 'Login: Successful' })
+        this.setState({ loginMessage: 'Login Successful' })
       })
       .catch(e => {
         if (e.response) {
-          this.setState({ loginMessage: 'Login: failed!' })
+          this.setState({ loginMessage: 'Login failed!' })
         }
       })
     this.setState({ password: '' })

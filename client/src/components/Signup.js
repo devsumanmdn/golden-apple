@@ -30,7 +30,7 @@ class SignupForm extends Component {
       .then(res => {
         console.log(res.data)
         this.setState({
-          successMessage: res.data,
+          successMessage: 'Signup Successful',
           errorMessage: ''
         })
       })
@@ -110,6 +110,7 @@ class SignupForm extends Component {
             onChange={this.handleInputChange}
             onBlur={this.checkExistance}
             placeholder="Choose Username"
+            minLength="5"
             required
           />
           <input
