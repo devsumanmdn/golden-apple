@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Redirect } from 'react-router'
 import axios from 'axios'
+import * as actions from '../actions'
 import '../styles/App.css'
 
 class SignupForm extends Component {
@@ -9,84 +12,69 @@ class SignupForm extends Component {
       email: '',
       password: '',
       username: '',
-      errorMessage: '',
-      successMessage: '',
       usernameExist: '',
       emailExist: ''
     }
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
-    this.checkExistance = this.checkExistance.bind(this)
   }
 
   handleFormSubmit(event) {
     event.preventDefault()
-    axios
-      .post('/api/users/signup', {
-        email: this.state.email,
-        password: this.state.password,
-        username: this.state.username
-      })
-      .then(res => {
-        console.log(res.data)
-        this.setState({
-          successMessage: res.data,
-          errorMessage: ''
-        })
-      })
-      .catch(e => {
-        this.setState({
-          errorMessage: 'Sorry, invalid user data!',
-          successMessage: ''
-        })
-      })
-    this.setState({ email: '', password: '', username: '' })
+    const { email, username, password } = this.state
+    this.props.signupUser(email, username, password)
   }
 
   handleInputChange(event) {
     event.persist()
-    this.setState({
-      successMessage: ''
-    })
-    if (event.target.name === 'email' || event.target.name === 'username') {
-      event.target.value = event.target.value.toLowerCase()
+    const { name } = event.target
+    let { value } = event.target
+    if (name === 'email' || name === 'username') {
+      value = value.toLowerCase()
     }
 
-    this.setState({ [event.target.name]: event.target.value })
+    this.setState({ [name]: value })
 
     // check existance of email and username
-    if (event.target.name === 'email' || event.target.name === 'username') {
-      this.setState({ [event.target.name + 'Exist']: 's' })
+    if (name === 'email' || name === 'username') {
+      this.setState({ [`${name}Exist`]: 's' })
       axios
         .post('/api/users/query', {
-          prop: event.target.name,
-          value: event.target.value
+          prop: name,
+          value
         })
         .then(res => {
-          console.log(res.data)
+          if (process.env.NODE_ENV === 'development') {
+            console.log(res.data)
+          }
           if (res.data !== false) {
-            this.setState({ [res.data + 'Exist']: `exist_err` })
+            this.setState({ [`${res.data}Exist`]: 'exist_err' })
           } else {
-            this.setState({ [event.target.name + 'Exist']: '' })
+            this.setState({ [`${name}Exist`]: '' })
           }
         })
         .catch(e => {
-          console.log(e)
+          if (process.env.NODE_ENV === 'development') {
+            console.log(e)
+          }
           this.setState({
-            [event.target.name + 'Exist']: ''
+            [`${name}Exist`]: ''
           })
         })
     }
   }
 
-  checkExistance(event) {}
   render() {
+    if (this.props.isAuthenticated) {
+      return <Redirect to="/" />
+    }
     return (
       <div className="SignupForm">
         <form onSubmit={this.handleFormSubmit}>
           <p className="form-title">Sign Up</p>
           <input
             name="email"
+            type="email"
             className={this.state.emailExist}
             value={this.state.email}
             onChange={this.handleInputChange}
@@ -120,25 +108,17 @@ class SignupForm extends Component {
             }
           />
         </form>
-        {this.state.errorMessage !== '' ? <p>{this.state.errorMessage}</p> : ''}
-        {this.state.successMessage !== '' ? (
-          <p>{this.state.successMessage}</p>
-        ) : (
-          ''
-        )}
-        {this.state.emailExist === 'exist_err' ? (
-          <p>Email Already Registered! Try Login</p>
-        ) : (
-          ''
-        )}
-        {this.state.usernameExist === 'exist_err' ? (
-          <p>Username Already Taken! </p>
-        ) : (
-          ''
-        )}
+        <p>{this.props.errorMessage}</p>
       </div>
     )
   }
 }
 
-export default SignupForm
+function mapStateToProps({ auth }) {
+  return {
+    errorMessage: auth.errorMessage,
+    isAuthenticated: auth.isAuthenticated
+  }
+}
+
+export default connect(mapStateToProps, actions)(SignupForm)
