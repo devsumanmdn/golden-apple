@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const User = require('./models/user')
 const { mongoose } = require('./config/config')
 const validator = require('validator')
+const Shop = require('./models/shop')
 
 const PORT = process.env.PORT || 5000
 const app = express()
@@ -85,6 +86,29 @@ app.get('/api/users/:userId', async (req, res) => {
     }
   } catch (e) {
     res.status(404).send(e)
+  }
+})
+
+app.post('/api/users/addshop', (req, res) => {
+  if (true) {
+    try {
+      const body = _.pick(req.body, [
+        'username',
+        'shopName',
+        'description',
+        'location'
+      ])
+
+      const shop = new Shop(body)
+      shop.save()
+      res.render(maptest.html)
+    } catch (e) {
+      res.render(maptest.html)
+      console.log(e)
+      res.send('internal error')
+    }
+  } else {
+    res.send("can't access it for you!")
   }
 })
 
