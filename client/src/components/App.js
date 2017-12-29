@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import Header from './components/Header'
-import Home from './components/Home'
-import Login from './components/Login'
-import Signup from './components/Signup'
-import User from './components/User'
 import { BrowserRouter, Route } from 'react-router-dom'
+import Header from '../containers/Header'
+import Home from '../components/Home'
+import Login from '../containers/Login'
+import Signup from '../containers/Signup'
+import User from '../components/User'
 // import './styles/App.css'
 
 class App extends Component {

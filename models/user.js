@@ -3,7 +3,7 @@ const _ = require('lodash')
 const keys = require('../config/keys')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const Schema = mongoose.Schema
+const { Schema } = mongoose
 const validator = require('validator')
 
 const UserSchema = new Schema(
@@ -56,30 +56,29 @@ const UserSchema = new Schema(
   { usePushEach: true }
 )
 
-UserSchema.methods.toJSON = function() {
+UserSchema.methods.toJSON = function toJSON() {
   const user = this
   const userObject = user.toObject()
   return _.pick(userObject, ['_id', 'email'])
 }
 
-UserSchema.methods.generateAuthToken = function() {
+UserSchema.methods.generateAuthToken = function generateAuthToken() {
   const user = this
-  const access = 'auth'
-  const token = jwt
-    .sign({ _id: user._id.toHexString(), access }, keys.SECRET_KEY)
-    .toString()
-
-  user.tokens.push({ access, token })
-  return user.save().then(() => {
-    return token
-  })
+  const token = jwt.sign(
+    { sub: user._id, iat: Date.now() / 1000 },
+    keys.SECRET_KEY,
+    { expiresIn: '30d' }
+  )
+  return token
 }
 
-UserSchema.pre('save', function(next) {
+UserSchema.pre('save', function preSave(next) {
   const user = this
   if (user.isModified('password')) {
     bcrypt.genSalt(10, (err, salt) => {
+      if (err) throw err
       bcrypt.hash(user.password, salt, (err, hash) => {
+        if (err) throw err
         user.password = hash
         next()
       })
@@ -89,15 +88,24 @@ UserSchema.pre('save', function(next) {
   }
 })
 
-UserSchema.statics.findByCredentials = function(prop, value, password) {
-  const User = this
-  return User.findOne({ [prop]: value })
-    .then(user => {
-      if (!user) {
-        return Promise.reject()
-      }
+UserSchema.statics.findByCredentials = async function findByCredentials(
+  uid,
+  candidatePassword
+) {
+  try {
+    const User = this
+    let user
+    if (validator.isEmail(uid)) {
+      const email = uid.toLowerCase()
+      user = await User.findOne({ email })
+    } else {
+      // $regex with 'i' flag helps us to make case in-sensitive searches
+      user = await User.findOne({ username: { $regex: new RegExp(uid, 'i') } })
+    }
+    if (user) {
       return new Promise((resolve, reject) => {
-        bcrypt.compare(password, user.password, (err, res) => {
+        bcrypt.compare(candidatePassword, user.password, (err, res) => {
+          if (err) throw err
           if (res) {
             resolve(user)
           } else {
@@ -105,8 +113,11 @@ UserSchema.statics.findByCredentials = function(prop, value, password) {
           }
         })
       })
-    })
-    .catch(e => e)
+    }
+    throw new Error('User not found')
+  } catch (e) {
+    return Promise.reject(e.message)
+  }
 }
 
 const User = mongoose.model('user', UserSchema)
