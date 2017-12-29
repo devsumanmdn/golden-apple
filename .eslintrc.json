@@ -1,0 +1,15 @@
+{
+  "root": true,
+  "extends": "airbnb",
+  "rules": {
+    "semi": "off",
+    "arrow-parens": "off",
+    "comma-dangle": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "import/newline-after-import": "off"
+  },
+  "env": {
+    "node": true,
+    "jest": true
+  }
+}
