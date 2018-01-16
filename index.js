@@ -23,28 +23,8 @@ app.post('/api/users/query', routes.authRoutes.queryUser)
 app.post('/api/users/login', requireLogin, routes.authRoutes.userSignin)
 app.get('/api/users/:userId', requireAuthToken, routes.authRoutes.fetchUser)
 
-app.post('/api/users/addshop', (req, res) => {
-  if (true) {
-    try {
-      const body = _.pick(req.body, [
-        'username',
-        'shopName',
-        'description',
-        'location'
-      ])
-
-      const shop = new Shop(body)
-      shop.save()
-      res.render(maptest.html)
-    } catch (e) {
-      res.render(maptest.html)
-      console.log(e)
-      res.send('internal error')
-    }
-  } else {
-    res.send("can't access it for you!")
-  }
-})
+app.post('/api/store/add', requireAuthToken, routes.storeRoutes.addShop)
+app.delete('/api/store/delete', requireAuthToken, routes.storeRoutes.deleteShop)
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('./client/build'))
