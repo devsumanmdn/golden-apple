@@ -6,7 +6,8 @@
     "arrow-parens": "off",
     "comma-dangle": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "import/newline-after-import": "off"
+    "import/newline-after-import": "off",
+    "object-curly-newline": "off"
   },
   "env": {
     "node": true,
