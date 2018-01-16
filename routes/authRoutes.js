@@ -28,7 +28,7 @@ module.exports = {
       }
       throw new Error('Authentication failed!')
     } catch (e) {
-      res.status(403).send(e.message)
+      return res.status(403).send(e.message)
     }
   },
 
