@@ -14,7 +14,7 @@ const localLogin = new LocalStrategy(localOptions, (uid, password, done) => {
       if (user) {
         const token = user.generateAuthToken()
         const userToSend = {
-          id: user._id,
+          id: user._id, // eslint-disable-line
           email: user.email,
           username: user.username,
           token
@@ -38,7 +38,7 @@ const jwtAuth = new JwtStrategy(jwtOptions, (payload, done) => {
     .then(user => {
       if (user) {
         const userToSend = {
-          id: user._id,
+          id: user._id, // eslint-disable-line
           email: user.email,
           username: user.username
         }
