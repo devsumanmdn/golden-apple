@@ -4,7 +4,7 @@ import Header from '../containers/Header'
 import Home from '../components/Home'
 import Login from '../containers/Login'
 import Signup from '../containers/Signup'
-import User from '../components/User'
+import Dashboard from '../components/Dashboard'
 // import './styles/App.css'
 
 class App extends Component {
@@ -21,7 +21,7 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/signup" component={Signup} />
-            <Route exact path="/user" component={User} />
+            <Route exact path="/dashboard" component={Dashboard} />
           </div>
         </BrowserRouter>
       </div>

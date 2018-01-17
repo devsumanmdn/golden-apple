@@ -8,8 +8,9 @@ export function signinUser(uid, password) {
       .post('/api/users/login', { uid, password })
       .then(res => {
         if (res.data.token) {
-          dispatch({ type: AUTH_USER })
+          dispatch({ type: AUTH_USER, payload: res.data.username })
           localStorage.setItem('auth_token', res.data.token)
+          localStorage.setItem('username', res.data.username)
         }
       })
       .catch(e => {
@@ -37,6 +38,7 @@ export function signupUser(email, username, password) {
 
 export function signoutUser() {
   localStorage.removeItem('auth_token')
+  localStorage.removeItem('username')
   return { type: UNAUTH_USER }
 }
 

@@ -16,12 +16,22 @@ function SignoutButton({ onLogout }) {
   return <button onClick={onLogout}>Signout</button>
 }
 
+function DashboardButton() {
+  return <Link to="/dashboard">Dashboard</Link>
+}
+
+function AddShopButton() {
+  return <Link to="/addShop">Add Shop</Link>
+}
+
 function Header(props) {
   let button = null
   if (props.isAuthenticated) {
     button = (
       <li>
         <SignoutButton onLogout={props.signoutUser} />
+        <AddShopButton />
+        <DashboardButton />
       </li>
     )
   } else {
