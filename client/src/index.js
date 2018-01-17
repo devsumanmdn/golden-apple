@@ -10,7 +10,7 @@ import registerServiceWorker from './registerServiceWorker'
 import './index.css'
 
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk))
-const token = localStorage.getItem('auth_token')
+const token = localStorage.getItem('auth_token') // eslint-disable-line
 if (token) {
   store.dispatch({ type: AUTH_USER })
 }
@@ -21,6 +21,6 @@ ReactDOM.render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.getElementById('root')
+  document.getElementById('root') // eslint-disable-line
 )
 registerServiceWorker()

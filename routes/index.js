@@ -1,4 +1,4 @@
 const authRoutes = require('./authRoutes')
-const addingRoutes = require('./addingRoutes')
+const storeRoutes = require('./storeRoutes')
 
-module.exports = { authRoutes, addingRoutes }
+module.exports = { authRoutes, storeRoutes }
