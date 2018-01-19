@@ -20,8 +20,8 @@ function DashboardButton() {
   return <Link to="/dashboard">Dashboard</Link>
 }
 
-function AddShopButton() {
-  return <Link to="/addShop">Add Shop</Link>
+function AddStoreButton() {
+  return <Link to="/addStore">Add Store</Link>
 }
 
 function Header(props) {
@@ -30,8 +30,8 @@ function Header(props) {
     button = (
       <li>
         <SignoutButton onLogout={props.signoutUser} />
-        <AddShopButton />
         <DashboardButton />
+        <AddStoreButton />
       </li>
     )
   } else {

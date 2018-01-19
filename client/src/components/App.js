@@ -5,6 +5,7 @@ import Home from '../components/Home'
 import Login from '../containers/Login'
 import Signup from '../containers/Signup'
 import Dashboard from '../components/Dashboard'
+import AddStore from '../containers/AddStore'
 // import './styles/App.css'
 
 class App extends Component {
@@ -22,6 +23,7 @@ class App extends Component {
             <Route exact path="/login" component={Login} />
             <Route exact path="/signup" component={Signup} />
             <Route exact path="/dashboard" component={Dashboard} />
+            <Route exact path="/addStore" component={AddStore} />
           </div>
         </BrowserRouter>
       </div>

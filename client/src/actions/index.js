@@ -42,6 +42,33 @@ export function signoutUser() {
   return { type: UNAUTH_USER }
 }
 
+export function addStore(name, description, location) {
+  return function(dispatch) {
+    axios
+      .post(
+        '/api/store/add',
+        {
+          name,
+          description,
+          location
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('auth_token')}`
+          }
+        }
+      )
+      .then(res => {
+        if (res.data === 'Done') {
+          alert('Store Added')
+        }
+      })
+      .catch(e => {
+        dispatch(authError(e.response.statusText))
+      })
+  }
+}
+
 function authError(error) {
   return { type: AUTH_ERROR, payload: error }
 }

@@ -7,6 +7,7 @@ module.exports = {
   addShop: async (req, res) => {
     try {
       const { name, description, location } = req.body
+      console.log(req.body)
       if (isValidShop(req.body) && !req.user.id) {
         throw new Error('Validation failed')
       }
@@ -21,7 +22,7 @@ module.exports = {
       })
       await User.findByIdAndUpdate(ownerId, { $push: { stores: shop } })
       await shop.save()
-      return res.send('Store created!')
+      return res.send('Done')
     } catch (e) {
       return res.status(403).send(e.message)
     }
