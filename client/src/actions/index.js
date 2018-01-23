@@ -1,14 +1,18 @@
 import axios from 'axios'
 import { AUTH_USER, UNAUTH_USER, AUTH_ERROR } from './types'
 
+function authError(error) {
+  return { type: AUTH_ERROR, payload: error }
+}
+
 export function signinUser(uid, password) {
-  // eslint-disable-next-line
-  return function(dispatch) {
+  return function signin(dispatch) {
     axios
       .post('/api/users/login', { uid, password })
       .then(res => {
         if (res.data.token) {
           dispatch({ type: AUTH_USER })
+          // eslint-disable-next-line no-undef
           localStorage.setItem('auth_token', res.data.token)
         }
       })
@@ -19,13 +23,13 @@ export function signinUser(uid, password) {
 }
 
 export function signupUser(email, username, password) {
-  // eslint-disable-next-line
-  return function(dispatch) {
+  return function signup(dispatch) {
     axios
       .post('/api/users/signup', { email, password, username })
       .then(res => {
         if (res.data.token) {
           dispatch({ type: AUTH_USER })
+          // eslint-disable-next-line no-undef
           localStorage.setItem('auth_token', res.data.token)
         }
       })
@@ -36,10 +40,9 @@ export function signupUser(email, username, password) {
 }
 
 export function signoutUser() {
-  localStorage.removeItem('auth_token')
-  return { type: UNAUTH_USER }
-}
-
-function authError(error) {
-  return { type: AUTH_ERROR, payload: error }
+  return function signout(dispatch) {
+    // eslint-disable-next-line no-undef
+    localStorage.removeItem('auth_token')
+    return dispatch({ type: UNAUTH_USER })
+  }
 }

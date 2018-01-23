@@ -1,7 +1,7 @@
 const User = require('../models/user')
 
 module.exports = {
-  userSignup: async (req, res) => {
+  userSignup: async (req, res, next) => {
     try {
       let { email } = req.body
       const { username, password } = req.body
@@ -14,7 +14,8 @@ module.exports = {
       const token = newUser.generateAuthToken()
       if (token) {
         await newUser.save()
-        res.send({ token })
+        req.body.uid = email
+        next()
       }
     } catch (e) {
       res.status(403).send(e.message)
@@ -30,6 +31,11 @@ module.exports = {
     } catch (e) {
       return res.status(403).send(e.message)
     }
+  },
+
+  signoutUser: (req, res) => {
+    req.logout()
+    return res.redirect('/')
   },
 
   queryUser: async (req, res) => {
@@ -56,5 +62,19 @@ module.exports = {
     } catch (e) {
       res.status(404).send(e)
     }
-  }
+  },
+
+  // eslint-disable-next-line consistent-return
+  authSession: (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).send({ error: 'authentication failed' })
+    }
+    next()
+  },
+
+  authGoogleCallback: (req, res) => {
+    res.redirect('/')
+  },
+
+  getCurrentUser: (req, res) => res.send(req.user)
 }
