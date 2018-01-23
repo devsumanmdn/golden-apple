@@ -76,7 +76,7 @@ const googleOAuth2 = new GoogleStrategy(
     if (user) {
       const token = user.generateAuthToken()
       const senitizedUser = {
-        id: user._id, // eslint-disable-line
+        id: user._id, // eslint-disable-line no-underscore-dangle
         username: user.username,
         token
       }

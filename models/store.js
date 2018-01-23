@@ -16,7 +16,26 @@ const StoreSchema = new Schema({
   location: {
     pinCode: {
       type: Number,
+      required: true,
       min: 6
+    },
+    longitude: {
+      type: Number,
+      required: true
+    },
+    latitude: {
+      type: Number,
+      required: true
+    },
+    road: {
+      type: String
+    },
+    postOffice: {
+      type: String
+    },
+    city: {
+      type: String,
+      required: true
     }
   }
 })

@@ -22,8 +22,12 @@ function SignoutButton({ onLogout }) {
   )
 }
 
-function AddShop() {
-  return <a href="/shops/add">Add Shop</a>
+function DashboardButton() {
+  return <Link to="/dashboard">Dashboard</Link>
+}
+
+function AddShopButton() {
+  return <Link to="/addStore">Add Shop</Link>
 }
 
 function GoogleAuth() {
@@ -38,7 +42,10 @@ function Header(props) {
         return [
           <ul>
             <li key={uuid()}>
-              <AddShop />
+              <DashboardButton />
+            </li>
+            <li key={uuid()}>
+              <AddShopButton />
             </li>
             <li key={uuid()}>
               <SignoutButton onLogout={props.signoutUser} />

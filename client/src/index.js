@@ -15,7 +15,7 @@ axios
   .get('/api/current_user')
   .then(res => {
     if (res.data) {
-      store.dispatch({ type: AUTH_USER })
+      store.dispatch({ type: AUTH_USER, payload: res.data.username })
     }
   })
   // eslint-disable-next-line no-unused-vars
