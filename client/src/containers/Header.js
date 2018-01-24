@@ -14,12 +14,8 @@ function SignupButton() {
 }
 
 // eslint-disable-next-line react/prop-types
-function SignoutButton({ onLogout }) {
-  return (
-    <a onClick={onLogout} href="/api/logout">
-      Signout
-    </a>
-  )
+function SignoutButton() {
+  return <a href="/api/logout">Signout</a>
 }
 
 function DashboardButton() {
@@ -48,7 +44,7 @@ function Header(props) {
               <AddShopButton />
             </li>
             <li key={uuid()}>
-              <SignoutButton onLogout={props.signoutUser} />
+              <SignoutButton />
             </li>
           </ul>
         ]

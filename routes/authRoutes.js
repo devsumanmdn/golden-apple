@@ -25,7 +25,7 @@ module.exports = {
   userSignin: (req, res) => {
     try {
       if (req.user) {
-        return res.send({ token: req.user.token, username: req.user.username })
+        return res.redirect('/')
       }
       throw new Error('Authentication failed!')
     } catch (e) {

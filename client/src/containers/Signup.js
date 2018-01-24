@@ -15,14 +15,7 @@ class SignupForm extends Component {
       usernameExist: '',
       emailExist: ''
     }
-    this.handleFormSubmit = this.handleFormSubmit.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
-  }
-
-  handleFormSubmit(event) {
-    event.preventDefault()
-    const { email, username, password } = this.state
-    this.props.signupUser(email, username, password)
   }
 
   handleInputChange(event) {
@@ -70,7 +63,7 @@ class SignupForm extends Component {
     }
     return (
       <div className="SignupForm">
-        <form onSubmit={this.handleFormSubmit}>
+        <form method="post" action="/api/users/signup">
           <p className="form-title">Sign Up</p>
           <input
             name="email"
