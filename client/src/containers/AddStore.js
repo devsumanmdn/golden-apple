@@ -49,7 +49,7 @@ class AddStore extends Component {
   }
 
   render() {
-    if (!localStorage.getItem('auth_token')) {
+    if (!this.props.isAuthenticated) {
       return <Redirect to="/login" />
     }
     return (

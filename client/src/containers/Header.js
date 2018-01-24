@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import uuid from 'uuid'
 import * as actions from '../actions'
 import '../styles/Header.css'
 
@@ -12,42 +13,66 @@ function SignupButton() {
   return <a href="/signup">Signup</a>
 }
 
-function SignoutButton({ onLogout }) {
-  return <button onClick={onLogout}>Signout</button>
+// eslint-disable-next-line react/prop-types
+function SignoutButton() {
+  return <a href="/api/logout">Signout</a>
 }
 
 function DashboardButton() {
   return <Link to="/dashboard">Dashboard</Link>
 }
 
-function AddStoreButton() {
-  return <Link to="/addStore">Add Store</Link>
+function AddShopButton() {
+  return <Link to="/addStore">Add Shop</Link>
+}
+
+function GoogleAuth() {
+  return <a href="/auth/google">Google</a>
 }
 
 function Header(props) {
-  let button = null
-  if (props.isAuthenticated) {
-    button = (
-      <li>
-        <SignoutButton onLogout={props.signoutUser} />
-        <DashboardButton />
-        <AddStoreButton />
-      </li>
-    )
-  } else {
-    button = (
-      <li>
-        <LoginButton /> <SignupButton />
-      </li>
-    )
+  function renderHeaderLinks() {
+    // eslint-disable-next-line react/prop-types
+    switch (props.isAuthenticated) {
+      case true:
+        return [
+          <ul>
+            <li key={uuid()}>
+              <DashboardButton />
+            </li>
+            <li key={uuid()}>
+              <AddShopButton />
+            </li>
+            <li key={uuid()}>
+              <SignoutButton />
+            </li>
+          </ul>
+        ]
+      case false:
+        return [
+          <ul>
+            <li key={uuid()}>
+              <LoginButton />
+            </li>
+            <li key={uuid()}>
+              <SignupButton />
+            </li>
+            <li key={uuid()}>
+              <GoogleAuth />
+            </li>
+          </ul>
+        ]
+      default:
+        return null
+    }
   }
   return (
     <nav className="nav">
       <ul>
-        <li className="brand">
+        <li key={uuid()} className="brand">
           <Link to="/">Brand</Link>
         </li>
-        {button}
+        {renderHeaderLinks()}
       </ul>
     </nav>
   )

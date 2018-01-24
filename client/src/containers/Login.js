@@ -11,18 +11,11 @@ class Login extends Component {
       password: ''
     }
     this.handleInputChange = this.handleInputChange.bind(this)
-    this.handleFormSubmit = this.handleFormSubmit.bind(this)
   }
 
   handleInputChange(event) {
     const { name, value } = event.target
     this.setState({ [name]: value })
-  }
-
-  handleFormSubmit(event) {
-    event.preventDefault()
-    const { uid, password } = this.state
-    this.props.signinUser(uid, password)
   }
 
   render() {
@@ -31,14 +24,14 @@ class Login extends Component {
     }
     return (
       <div>
-        <form onSubmit={this.handleFormSubmit}>
+        <form method="post" action="/api/users/login">
           <p className="form-title">Login</p>
           <input
             type="text"
             name="uid"
             placeholder="Email or Username"
             onChange={this.handleInputChange}
-            value={this.state.email}
+            value={this.state.uid}
             required
           />
           <input

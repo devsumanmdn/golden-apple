@@ -7,12 +7,11 @@ module.exports = {
   addShop: async (req, res) => {
     try {
       const { name, description, location } = req.body
-      console.log(req.body)
       if (isValidShop(req.body) && !req.user.id) {
         throw new Error('Validation failed')
       }
       const shopId = new ObjectId()
-      const ownerId = new ObjectId(req.user.id)
+      const ownerId = req.user.id
       const shop = new Store({
         name,
         shopId,
@@ -34,16 +33,20 @@ module.exports = {
       if (!ownerId) {
         throw new Error('User authentication failed!')
       }
-      const shop = await Store.findByIdAndRemove(shopId)
+      let shop = await Store.findById(shopId)
       if (!shop) {
         throw new Error(`No shop found with id ${shopId}`)
       }
+      if (shop.ownerId.toHexString() !== ownerId.toHexString()) {
+        throw new Error('Not allowed')
+      }
+      shop = await Store.findByIdAndRemove(shopId)
       await User.findByIdAndUpdate(ownerId, {
         $pull: { stores: new ObjectId(shopId) }
       })
       return res.send('Deleted successfully')
     } catch (e) {
-      return res.status(403).send(e.message)
+      return res.status(403).send({ error: e.message })
     }
   }
 }
