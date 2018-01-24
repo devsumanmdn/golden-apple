@@ -26,6 +26,9 @@ app.get('/api/users/:userId', requireAuthToken, routes.authRoutes.fetchUser)
 app.post('/api/store/add', requireAuthToken, routes.storeRoutes.addShop)
 app.delete('/api/store/delete', requireAuthToken, routes.storeRoutes.deleteShop)
 
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }))
+app.get('/auth/google/callback', routes.authRoutes.auth_google_callback)
+
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('./client/build'))
   app.get('*', (req, res) => {

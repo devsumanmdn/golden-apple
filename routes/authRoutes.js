@@ -1,4 +1,24 @@
+const { request } = require('https')
+
 const User = require('../models/user')
+const GoogleStrategy = require('passport-google-oauth20').Strategy
+const passport = require('passport')
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID:
+        '178673999916-ao4pdc1uipjbabm1uvhjnrf28cnq8ub5.apps.googleusercontent.com',
+      clientSecret: 'CMIxfWObjuO8rmBlNJGAxmzk',
+      callbackURL: 'http://localhost:5000/auth/google/callback'
+    },
+    function(accessToken, refreshToken, profile, cb) {
+      User.findOrCreate({ googleId: profile.id }, function(err, user) {
+        return cb(err, user)
+      })
+    }
+  )
+)
 
 module.exports = {
   userSignup: async (req, res) => {
@@ -56,5 +76,17 @@ module.exports = {
     } catch (e) {
       res.status(404).send(e)
     }
+  },
+
+  auth_google: async (req, res) => {
+    passport.authenticate('google', { scope: ['profile'] })
+  },
+
+  auth_google_callback: async (req, res) => {
+    passport.authenticate('google', { failureRedirect: '/login' }),
+      function(req, res) {
+        // Successful authentication, redirect home.
+        res.redirect('/')
+      }
   }
 }
