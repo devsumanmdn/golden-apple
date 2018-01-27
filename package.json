@@ -1,28 +1,25 @@
 {
-  "name": "golden-apple",
+  "name": "google-maps",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
-    "test": "jest"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "MIT",
+  "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "express": "^4.16.2",
-    "jsonwebtoken": "^8.1.0",
-    "lodash": "^4.17.4",
-    "mongoose": "^4.13.1",
-    "validator": "^9.1.1"
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "react-google-maps": "^4.11.0",
+    "superagent": "^2.3.0"
   },
   "devDependencies": {
-    "jest": "^21.2.1",
-    "nodemon": "^1.12.1"
-  },
-  "jest": {
-    "setupTestFrameworkScriptFile": "<rootDir>/__test__/run_test.js"
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "webpack": "^1.13.2"
   }
 }
