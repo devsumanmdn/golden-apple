@@ -1,6 +1,7 @@
 const passport = require('passport')
 const JwtStrategy = require('passport-jwt').Strategy
 const GoogleStrategy = require('passport-google-oauth20').Strategy
+const FacebookStrategy = require('passport-facebook')
 const { ExtractJwt } = require('passport-jwt')
 const LocalStrategy = require('passport-local')
 const keys = require('../config/keys')
@@ -86,6 +87,30 @@ const googleOAuth2 = new GoogleStrategy(
   }
 )
 
+const facebookAuth = new FacebookStrategy(
+  {
+    clientID: keys.FACEBOOK_APP_ID,
+    clientSecret: keys.FACEBOOK_APP_SECRET,
+    callbackURL: '/auth/facebook/callback',
+    profileFields: ['email']
+  },
+  async (accessToken, refreshToken, profile, done) => {
+    const email = profile.emails[0].value
+    const user = await User.findOne({ email })
+    if (user) {
+      const token = user.generateAuthToken()
+      const senitizedUser = {
+        id: user._id, // eslint-disable-line no-underscore-dangle
+        username: user.username,
+        token
+      }
+      return done(null, senitizedUser)
+    }
+    done(null, false)
+  }
+)
+
 passport.use('jwtLogin', jwtAuth)
 passport.use('localLogin', localLogin)
 passport.use('google', googleOAuth2)
+passport.use('facebook', facebookAuth)

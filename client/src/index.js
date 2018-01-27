@@ -11,6 +11,7 @@ import registerServiceWorker from './registerServiceWorker'
 import './index.css'
 
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk))
+
 // Show blank header while user is fetching
 store.dispatch({ type: FETCH_USER })
 

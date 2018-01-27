@@ -76,5 +76,9 @@ module.exports = {
     res.redirect('/')
   },
 
+  authFbCallback: (req, res) => {
+    return res.redirect('/')
+  },
+
   getCurrentUser: (req, res) => res.send(req.user)
 }

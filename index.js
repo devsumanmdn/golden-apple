@@ -78,6 +78,16 @@ app.get(
   routes.authRoutes.authGoogleCallback
 )
 
+app.get(
+  '/auth/facebook',
+  passport.authenticate('facebook', { scope: ['email'] })
+)
+app.get(
+  '/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/signup' }),
+  routes.authRoutes.authFbCallback
+)
+
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('./client/build'))
   app.get('*', (req, res) => {
