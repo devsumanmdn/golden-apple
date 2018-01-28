@@ -66,6 +66,14 @@ app.delete(
   routes.authRoutes.authSession,
   routes.storeRoutes.deleteShop
 )
+app.get('/api/stores', routes.storeRoutes.getStores)
+app.get('/api/store/:storeId', routes.storeRoutes.getSingleStore)
+app.put(
+  '/api/store/toggleVisiblity',
+  routes.authRoutes.authSession,
+  routes.storeRoutes.toggleVisiblity
+)
+
 app.get('/api/current_user', routes.authRoutes.getCurrentUser)
 
 app.get(
