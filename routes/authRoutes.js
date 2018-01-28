@@ -64,7 +64,6 @@ module.exports = {
     }
   },
 
-  // eslint-disable-next-line consistent-return
   authSession: (req, res, next) => {
     if (!req.user) {
       return res.status(401).send({ error: 'authentication failed' })

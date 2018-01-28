@@ -1,6 +1,7 @@
 module.exports = {
   MONGODB_URI: process.env.MONGODB_URI,
   SECRET_KEY: process.env.SECRET_KEY,
+  SESSION_SECRET: process.env.SESSION_SECRET,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
