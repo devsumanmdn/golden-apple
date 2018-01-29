@@ -32,6 +32,7 @@
     "passport-google-oauth20": "^1.0.0",
     "passport-jwt": "^3.0.1",
     "passport-local": "^1.0.0",
+    "react-star-ratings": "^1.4.1",
     "validator": "^9.2.0"
   },
   "devDependencies": {

@@ -6,6 +6,7 @@ import Login from '../containers/Login'
 import Signup from '../containers/Signup'
 import Dashboard from '../components/Dashboard'
 import AddStore from '../containers/AddStore'
+import Stores from '../components/stores'
 // import './styles/App.css'
 
 class App extends Component {
@@ -24,6 +25,7 @@ class App extends Component {
             <Route exact path="/signup" component={Signup} />
             <Route exact path="/dashboard" component={Dashboard} />
             <Route exact path="/addStore" component={AddStore} />
+            <Route exact path="/stores" component={Stores} />
           </div>
         </BrowserRouter>
       </div>

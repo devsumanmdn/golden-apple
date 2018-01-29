@@ -1,6 +1,8 @@
 nav {
   margin: 0px;
   padding: 0px;
+  border-bottom: 1px #eeeeee solid;
+  background-color: white;
 }
 
 ul {

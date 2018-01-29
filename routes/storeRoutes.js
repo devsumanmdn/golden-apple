@@ -48,5 +48,15 @@ module.exports = {
     } catch (e) {
       return res.status(403).send({ error: e.message })
     }
+  },
+  getStores: async (req, res) => {
+    Store.find({}, function(err, store) {
+      var storeMap = []
+      store.forEach(function(store) {
+        storeMap.push(store)
+      })
+
+      res.send(storeMap)
+    })
   }
 }

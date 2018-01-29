@@ -68,6 +68,8 @@ app.delete(
 )
 app.get('/api/current_user', routes.authRoutes.getCurrentUser)
 
+app.get('/api/stores', routes.storeRoutes.getStores)
+
 app.get(
   '/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
