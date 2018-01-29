@@ -26,6 +26,64 @@ module.exports = {
       return res.status(403).send(e.message)
     }
   },
+
+  getStores: async (req, res) => {
+    const stores = await Store.find({ isPrivate: false })
+    const storesToSend = stores.map(store => {
+      const storeWithWantedData = {
+        id: store._id,
+        name: store.name,
+        description: store.description,
+        location: store.location
+      }
+      return storeWithWantedData
+    })
+    res.json(storesToSend)
+  },
+
+  getSingleStore: async (req, res) => {
+    try {
+      const { storeId } = req.params
+      const store = await Store.findById(storeId)
+      if (!store || store.isPrivate) {
+        throw new Error('Store not found')
+      }
+      const storeToSend = {
+        id: store.id,
+        name: store.name,
+        description: store.description,
+        location: store.location
+      }
+      res.json(storeToSend)
+    } catch (e) {
+      res.status(403).send({ error: e.message })
+    }
+  },
+
+  toggleVisiblity: async (req, res) => {
+    try {
+      const { shopId } = req.body
+      const ownerId = req.user.id
+      if (!ownerId) {
+        throw new Error('User authentication failed!')
+      }
+      const shop = await Store.findById(shopId)
+      if (!shop) {
+        throw new Error(`No shop found with id ${shopId}`)
+      }
+      if (shop.ownerId.toHexString() !== ownerId.toHexString()) {
+        throw new Error('Not allowed')
+      }
+      shop.isPrivate = !shop.isPrivate
+      await shop.save()
+      res.send({
+        success: `Store is ${shop.isPrivate ? 'Hidden' : 'Visible'}`
+      })
+    } catch (e) {
+      res.status(403).send({ error: e.message })
+    }
+  },
+
   deleteShop: async (req, res) => {
     try {
       const { shopId } = req.body

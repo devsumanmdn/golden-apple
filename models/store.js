@@ -13,6 +13,10 @@ const StoreSchema = new Schema({
   description: {
     type: String
   },
+  isPrivate: {
+    type: Boolean,
+    default: true
+  },
   location: {
     pinCode: {
       type: Number,

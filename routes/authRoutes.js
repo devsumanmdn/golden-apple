@@ -66,7 +66,6 @@ module.exports = {
     }
   },
 
-  // eslint-disable-next-line consistent-return
   authSession: (req, res, next) => {
     if (!req.user) {
       return res.status(401).send({ error: 'authentication failed' })
@@ -76,6 +75,10 @@ module.exports = {
 
   authGoogleCallback: (req, res) => {
     res.redirect('/')
+  },
+
+  authFbCallback: (req, res) => {
+    return res.redirect('/')
   },
 
   getCurrentUser: (req, res) => res.send(req.user)

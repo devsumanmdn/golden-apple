@@ -30,6 +30,10 @@ function GoogleAuth() {
   return <a href="/auth/google">Google</a>
 }
 
+function FacebookAuth() {
+  return <a href="/auth/facebook">Facebook</a>
+}
+
 function Header(props) {
   function renderHeaderLinks() {
     // eslint-disable-next-line react/prop-types
@@ -59,6 +63,9 @@ function Header(props) {
             </li>
             <li key={uuid()}>
               <GoogleAuth />
+            </li>
+            <li key={uuid()}>
+              <FacebookAuth />
             </li>
           </ul>
         ]

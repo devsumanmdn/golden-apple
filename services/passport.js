@@ -1,6 +1,7 @@
 const passport = require('passport')
 const JwtStrategy = require('passport-jwt').Strategy
 const GoogleStrategy = require('passport-google-oauth20').Strategy
+const FacebookStrategy = require('passport-facebook')
 const { ExtractJwt } = require('passport-jwt')
 const LocalStrategy = require('passport-local')
 const keys = require('../config/keys')
@@ -13,7 +14,7 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((id, done) => {
   User.findById(id).then(user => {
     const userToDeserialize = {
-      id: user._id, // eslint-disable-line no-underscore-dangle
+      id: user._id,
       username: user.username
     }
     done(null, userToDeserialize)
@@ -23,26 +24,21 @@ passport.deserializeUser((id, done) => {
 const localOptions = {
   usernameField: 'uid'
 }
-module.exports = localLogin = new LocalStrategy(
-  localOptions,
-  (uid, password, done) => {
-    console.log(uid, password)
-    User.findByCredentials(uid, password)
-      .then(user => {
-        if (user) {
-          const token = user.generateAuthToken()
-          const userToSend = {
-            id: user._id, // eslint-disable-line no-underscore-dangle
-            username: user.username,
-            token
-          }
-          return done(null, userToSend)
+const localLogin = new LocalStrategy(localOptions, (uid, password, done) => {
+  User.findByCredentials(uid, password)
+    .then(user => {
+      if (user) {
+        const token = user.generateAuthToken()
+        const userToSend = {
+          id: user._id,
+          username: user.username,
+          token
         }
         return done(null, false)
-      })
-      .catch(e => done(e))
-  }
-)
+      }
+    })
+    .catch(e => done(e))
+})
 
 const jwtOptions = {
   secretOrKey: keys.SECRET_KEY,
@@ -56,7 +52,7 @@ const jwtAuth = new JwtStrategy(jwtOptions, (payload, done) => {
     .then(user => {
       if (user) {
         const userToSend = {
-          id: user._id, // eslint-disable-line no-underscore-dangle
+          id: user._id,
           username: user.username
         }
         return done(null, userToSend)
@@ -74,14 +70,36 @@ const googleOAuth2 = new GoogleStrategy(
     callbackURL: '/auth/google/callback',
     proxy: true
   },
-  // eslint-disable-next-line consistent-return
   async (accessToken, refreshToken, profile, done) => {
     const email = profile.emails[0].value
     const user = await User.findOne({ email })
     if (user) {
       const token = user.generateAuthToken()
       const senitizedUser = {
-        id: user._id, // eslint-disable-line no-underscore-dangle
+        id: user._id,
+        username: user.username,
+        token
+      }
+      return done(null, senitizedUser)
+    }
+    done(null, false)
+  }
+)
+
+const facebookAuth = new FacebookStrategy(
+  {
+    clientID: keys.FACEBOOK_APP_ID,
+    clientSecret: keys.FACEBOOK_APP_SECRET,
+    callbackURL: '/auth/facebook/callback',
+    profileFields: ['email']
+  },
+  async (accessToken, refreshToken, profile, done) => {
+    const email = profile.emails[0].value
+    const user = await User.findOne({ email })
+    if (user) {
+      const token = user.generateAuthToken()
+      const senitizedUser = {
+        id: user._id,
         username: user.username,
         token
       }
@@ -94,3 +112,4 @@ const googleOAuth2 = new GoogleStrategy(
 passport.use('jwtLogin', jwtAuth)
 passport.use('localLogin', localLogin)
 passport.use('google', googleOAuth2)
+passport.use('facebook', facebookAuth)

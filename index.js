@@ -66,6 +66,14 @@ app.delete(
   routes.authRoutes.authSession,
   routes.storeRoutes.deleteShop
 )
+app.get('/api/stores', routes.storeRoutes.getStores)
+app.get('/api/store/:storeId', routes.storeRoutes.getSingleStore)
+app.put(
+  '/api/store/toggleVisiblity',
+  routes.authRoutes.authSession,
+  routes.storeRoutes.toggleVisiblity
+)
+
 app.get('/api/current_user', routes.authRoutes.getCurrentUser)
 
 app.get('/api/stores', routes.storeRoutes.getStores)
@@ -80,8 +88,15 @@ app.get(
   routes.authRoutes.authGoogleCallback
 )
 
-// app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }))
-// app.get('/auth/google/callback', routes.authRoutes.auth_google_callback)
+app.get(
+  '/auth/facebook',
+  passport.authenticate('facebook', { scope: ['email'] })
+)
+app.get(
+  '/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/signup' }),
+  routes.authRoutes.authFbCallback
+)
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('./client/build'))
