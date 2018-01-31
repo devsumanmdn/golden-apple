@@ -101,7 +101,7 @@ UserSchema.statics.findByCredentials = async function findByCredentials(
       user = await User.findOne({ uid })
     } else {
       // $regex with 'i' flag helps us to make case in-sensitive searches
-      user = await User.findOne({ lowerUsername: [uid] })
+      user = await User.findOne({ lowerUsername: uid })
     }
     if (user) {
       return new Promise((resolve, reject) => {
