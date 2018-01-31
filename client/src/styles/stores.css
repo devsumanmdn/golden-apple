@@ -43,9 +43,9 @@
 
 @media only screen and (max-width: 720px) {
   .store {
-    margin: 1vw;
+    margin: 6px;
     display: block;
-    width: 48vw;
+    width: calc(50vw - 20px);
     float: left;
   }
 }

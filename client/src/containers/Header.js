@@ -40,7 +40,7 @@ function Header(props) {
     switch (props.isAuthenticated) {
       case true:
         return [
-          <ul key={uuid()}>
+          <ul key={uuid()} className="nav-rightLinks">
             <li key={uuid()}>
               <DashboardButton />
             </li>
@@ -54,7 +54,7 @@ function Header(props) {
         ]
       case false:
         return [
-          <ul key={uuid()}>
+          <ul key={uuid()} className="nav-rightLinks">
             <li key={uuid()}>
               <LoginButton />
             </li>
@@ -75,9 +75,12 @@ function Header(props) {
   }
   return (
     <nav className="nav">
-      <ul key={uuid()}>
-        <li key={uuid()} className="brand">
+      <ul key={uuid()} className="nav-leftLinks">
+        <li key={uuid()} className=" brand">
           <Link to="/">Brand</Link>
+        </li>
+        <li key={uuid()}>
+          <Link to="/stores">Stores</Link>
         </li>
         {renderHeaderLinks()}
       </ul>
