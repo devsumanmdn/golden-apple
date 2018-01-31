@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import '../styles/stores.css'
+import { Link } from 'react-router-dom'
 import StarRatings from 'react-star-ratings'
 
 class Stores extends Component {
@@ -48,7 +49,7 @@ class Stores extends Component {
 
 const Store = props => {
   return (
-    <a href={'/store/' + props.data._id}>
+    <Link to={'/store/' + props.data._id}>
       <div className="store">
         <div className="storeDetails">
           <div className="store-head">
@@ -77,7 +78,7 @@ const Store = props => {
           </p>
         </div>
       </div>
-    </a>
+    </Link>
   )
 }
 
