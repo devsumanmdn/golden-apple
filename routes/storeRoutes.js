@@ -28,7 +28,8 @@ module.exports = {
   },
 
   getStores: async (req, res) => {
-    const stores = await Store.find({ isPrivate: false })
+    // const stores = await Store.find({ isPrivate: false })
+    const stores = await Store.find({})
     res.json(stores)
   },
 
