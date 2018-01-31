@@ -63,21 +63,17 @@ const jwtAuth = new JwtStrategy(jwtOptions, (payload, done) => {
 
 const googleOAuth2 = new GoogleStrategy(
   {
-    clientID:
-      '178673999916-ao4pdc1uipjbabm1uvhjnrf28cnq8ub5.apps.googleusercontent.com',
-    clientSecret: 'CMIxfWObjuO8rmBlNJGAxmzk',
-    callbackURL: '/auth/google/callback',
-    proxy: true
+    clientID: keys.GOOGLE_CLIENT_ID,
+    clientSecret: keys.GOOGLE_CLIENT_SECRET,
+    callbackURL: '/auth/google/callback'
   },
   async (accessToken, refreshToken, profile, done) => {
     const email = profile.emails[0].value
     const user = await User.findOne({ email })
     if (user) {
-      const token = user.generateAuthToken()
       const senitizedUser = {
         id: user._id,
-        username: user.username,
-        token
+        username: user.username
       }
       return done(null, senitizedUser)
     }
@@ -96,11 +92,9 @@ const facebookAuth = new FacebookStrategy(
     const email = profile.emails[0].value
     const user = await User.findOne({ email })
     if (user) {
-      const token = user.generateAuthToken()
       const senitizedUser = {
         id: user._id,
-        username: user.username,
-        token
+        username: user.username
       }
       return done(null, senitizedUser)
     }
