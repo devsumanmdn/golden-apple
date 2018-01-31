@@ -8,11 +8,12 @@ module.exports = {
       let { email } = req.body
       const { username, password } = req.body
       email = email.toLowerCase()
+      lowerUsername = username.toLowerCase()
       const existingUser = await User.findOne({ email })
       if (existingUser) {
         throw new Error('Email or Username already exist')
       }
-      const newUser = new User({ email, username, password })
+      const newUser = new User({ email, username, password, lowerUsername })
       const token = newUser.generateAuthToken()
       if (token) {
         await newUser.save()

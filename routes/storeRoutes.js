@@ -45,7 +45,7 @@ module.exports = {
     try {
       const { storeId } = req.params
       const store = await Store.findById(storeId)
-      if (!store || store.isPrivate) {
+      if (!store /*|| store.isPrivate*/) {
         throw new Error('Store not found')
       }
       const storeToSend = {

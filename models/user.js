@@ -22,6 +22,9 @@ const UserSchema = new Schema({
     unique: true,
     minlength: 1
   },
+  lowerUsername: {
+    type: String
+  },
   bio: {
     type: String
   },
@@ -93,12 +96,12 @@ UserSchema.statics.findByCredentials = async function findByCredentials(
   try {
     const User = this
     let user
+    uid = uid.toLowerCase()
     if (validator.isEmail(uid)) {
-      const email = uid.toLowerCase()
-      user = await User.findOne({ email })
+      user = await User.findOne({ uid })
     } else {
       // $regex with 'i' flag helps us to make case in-sensitive searches
-      user = await User.findOne({ username: { $regex: new RegExp(uid, 'i') } })
+      user = await User.findOne({ lowerUsername: [uid] })
     }
     if (user) {
       return new Promise((resolve, reject) => {

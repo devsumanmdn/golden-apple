@@ -1,0 +1,16 @@
+.IndvStoreDiv > * {
+  width: 93%;
+  padding: 1%;
+  margin: 2.5%;
+  background-color: white;
+  border-radius: 3px;
+}
+
+.IndvStoreHead > * {
+  text-align: justify;
+  padding: 5px;
+}
+.IndvStoreName {
+  font-size: 20px;
+  color: rgb(0, 22, 82);
+}

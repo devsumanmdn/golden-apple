@@ -34,8 +34,9 @@ const localLogin = new LocalStrategy(localOptions, (uid, password, done) => {
           username: user.username,
           token
         }
-        return done(null, false)
+        return done(null, userToSend)
       }
+      return done(null, false)
     })
     .catch(e => done(e))
 })

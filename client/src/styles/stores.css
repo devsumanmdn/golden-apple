@@ -1,0 +1,58 @@
+.stores-div {
+  display: flex;
+  flex-flow: wrap;
+}
+.store {
+  background-color: rgb(255, 255, 255);
+  margin: calc((1vw + 35px) / 6);
+  width: calc(33vw - 12px);
+  float: left;
+  color: black;
+  float: left;
+}
+.storeDetails > * {
+  position: relative;
+  margin: 5px;
+  padding: 0;
+  text-align: justify;
+}
+.store-head > * {
+  float: left;
+}
+.store-head {
+  width: 100%;
+  position: relative;
+  display: block;
+  line-height: 20px;
+  float: left;
+}
+
+.star-ratings {
+  width: auto;
+  padding: 0 !important;
+  margin: 0;
+}
+
+.storeName {
+  padding: 5px;
+  margin: 0;
+}
+.storeDescription {
+  float: unset;
+}
+
+@media only screen and (max-width: 720px) {
+  .store {
+    margin: 1vw;
+    display: block;
+    width: 48vw;
+    float: left;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .store {
+    margin: 2.5vw;
+    width: 95vw;
+  }
+}
