@@ -28,11 +28,9 @@ const localLogin = new LocalStrategy(localOptions, (uid, password, done) => {
   User.findByCredentials(uid, password)
     .then(user => {
       if (user) {
-        const token = user.generateAuthToken()
         const userToSend = {
           id: user._id,
-          username: user.username,
-          token
+          username: user.username
         }
         return done(null, userToSend)
       }

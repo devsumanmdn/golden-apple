@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const _ = require('lodash')
 const keys = require('../config/keys')
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+// const jwt = require('jsonwebtoken')
 const { Schema } = mongoose
 const validator = require('validator')
 
@@ -63,6 +63,7 @@ UserSchema.methods.toJSON = function toJSON() {
   return _.pick(userObject, ['_id', 'email'])
 }
 
+/*
 UserSchema.methods.generateAuthToken = function generateAuthToken() {
   const user = this
   const token = jwt.sign(
@@ -72,14 +73,15 @@ UserSchema.methods.generateAuthToken = function generateAuthToken() {
   )
   return token
 }
+*/
 
 UserSchema.pre('save', function preSave(next) {
   const user = this
   if (user.isModified('password')) {
-    bcrypt.genSalt(10, (err, salt) => {
-      if (err) throw err
-      bcrypt.hash(user.password, salt, (err, hash) => {
-        if (err) throw err
+    bcrypt.genSalt(10, (saltErr, salt) => {
+      if (saltErr) throw saltErr
+      bcrypt.hash(user.password, salt, (hashErr, hash) => {
+        if (hashErr) throw hashErr
         user.password = hash
         next()
       })
@@ -95,13 +97,12 @@ UserSchema.statics.findByCredentials = async function findByCredentials(
 ) {
   try {
     const User = this
+    const candidateUser = uid.toLowerCase().trim()
     let user
-    uid = uid.toLowerCase()
-    if (validator.isEmail(uid)) {
-      user = await User.findOne({ uid })
+    if (validator.isEmail(candidateUser)) {
+      user = await User.findOne({ email: candidateUser })
     } else {
-      // $regex with 'i' flag helps us to make case in-sensitive searches
-      user = await User.findOne({ lowerUsername: uid })
+      user = await User.findOne({ lowerUsername: candidateUser })
     }
     if (user) {
       return new Promise((resolve, reject) => {

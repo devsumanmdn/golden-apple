@@ -29,16 +29,7 @@ module.exports = {
 
   getStores: async (req, res) => {
     const stores = await Store.find({ isPrivate: false })
-    const storesToSend = stores.map(store => {
-      const storeWithWantedData = {
-        id: store._id,
-        name: store.name,
-        description: store.description,
-        location: store.location
-      }
-      return storeWithWantedData
-    })
-    res.json(storesToSend)
+    res.json(stores)
   },
 
   getSingleStore: async (req, res) => {
@@ -48,13 +39,7 @@ module.exports = {
       if (!store /*|| store.isPrivate*/) {
         throw new Error('Store not found')
       }
-      const storeToSend = {
-        id: store.id,
-        name: store.name,
-        description: store.description,
-        location: store.location
-      }
-      res.json(storeToSend)
+      res.json(store)
     } catch (e) {
       res.status(403).send({ error: e.message })
     }
@@ -106,15 +91,5 @@ module.exports = {
     } catch (e) {
       return res.status(403).send({ error: e.message })
     }
-  },
-  getStores: async (req, res) => {
-    Store.find({}, function(err, store) {
-      var storeMap = []
-      store.forEach(function(store) {
-        storeMap.push(store)
-      })
-
-      res.send(storeMap)
-    })
   }
 }

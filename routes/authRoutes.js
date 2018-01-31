@@ -1,5 +1,3 @@
-const { request } = require('https')
-
 const User = require('../models/user')
 
 module.exports = {
@@ -8,18 +6,15 @@ module.exports = {
       let { email } = req.body
       const { username, password } = req.body
       email = email.toLowerCase()
-      lowerUsername = username.toLowerCase()
+      const lowerUsername = username.toLowerCase()
       const existingUser = await User.findOne({ email })
       if (existingUser) {
         throw new Error('Email or Username already exist')
       }
       const newUser = new User({ email, username, password, lowerUsername })
-      const token = newUser.generateAuthToken()
-      if (token) {
-        await newUser.save()
-        req.body.uid = email
-        next()
-      }
+      await newUser.save()
+      req.body.uid = email
+      next()
     } catch (e) {
       res.status(403).send(e.message)
     }
@@ -78,9 +73,7 @@ module.exports = {
     res.redirect('/')
   },
 
-  authFbCallback: (req, res) => {
-    return res.redirect('/')
-  },
+  authFbCallback: (req, res) => res.redirect('/'),
 
   getCurrentUser: (req, res) => res.send(req.user)
 }
