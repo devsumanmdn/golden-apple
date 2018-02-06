@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import '../styles/stores.css'
+import '../styles/loader.css'
 import { Link } from 'react-router-dom'
 import StarRatings from 'react-star-ratings'
+import Loader from './Loader'
 
 class Stores extends Component {
   constructor(props) {
@@ -42,7 +44,7 @@ class Stores extends Component {
         </div>
       )
     } else {
-      return <div>Loading</div>
+      return <Loader />
     }
   }
 }
@@ -74,7 +76,7 @@ const Store = props => {
             </div>
           </div>
           <p className="storeDescription">
-            Description :{props.data.description}
+            Description:{' ' + props.data.description}
           </p>
         </div>
       </div>

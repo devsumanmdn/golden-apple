@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import Loader from './Loader'
 import '../styles/IndvStore.css'
 import StarRatings from 'react-star-ratings'
 
@@ -54,14 +55,14 @@ class IndvStore extends Component {
         </div>
       )
     } else {
-      return <div>Loading...</div>
+      return <Loader />
     }
   }
 }
 
 const Store = props => {
   return (
-    <div>
+    <div className="IndvStore">
       <div className="IndvStoreHead">
         {/* {JSON.stringify(props.data)} */}
         <div className="IndvStoreName">Name: {props.data.name}</div>{' '}

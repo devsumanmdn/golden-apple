@@ -74,17 +74,22 @@ function Header(props) {
     }
   }
   return (
-    <nav className="nav">
-      <ul key={uuid()} className="nav-leftLinks">
-        <li key={uuid()} className=" brand">
-          <Link to="/">Brand</Link>
-        </li>
-        <li key={uuid()}>
-          <Link to="/stores">Stores</Link>
-        </li>
+    <div className="navbar">
+      <nav className="nav">
+        <ul key={uuid()} className="nav-leftLinks">
+          <li className="brand" key={uuid()}>
+            <Link to="/">Golden-Apple</Link>
+          </li>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li key={uuid()}>
+            <Link to="/stores">Stores</Link>
+          </li>
+        </ul>
         {renderHeaderLinks()}
-      </ul>
-    </nav>
+      </nav>
+    </div>
   )
 }
 
