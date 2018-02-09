@@ -22,7 +22,7 @@ module.exports = {
 
   userSignin: (req, res) => {
     try {
-      if (req.user) {
+      if (req.isAuthenticated()) {
         return res.redirect('/')
       }
       throw new Error('Authentication failed!')
@@ -63,7 +63,7 @@ module.exports = {
   },
 
   authSession: (req, res, next) => {
-    if (!req.user) {
+    if (!req.isAuthenticated()) {
       return res.status(401).send({ error: 'authentication failed' })
     }
     next()
