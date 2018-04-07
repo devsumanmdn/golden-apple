@@ -45,5 +45,8 @@
     "jest": "^21.2.1",
     "nodemon": "^1.14.11",
     "supertest": "^3.0.0"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "<rootDir>/__test__/run_test.js"
   }
 }

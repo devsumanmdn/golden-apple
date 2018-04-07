@@ -29,11 +29,13 @@ app.use(helmet())
  * because they use CookieSession middleware and we can't use it before
  */
 
+// eslint-disable-next-line function-paren-newline
 app.use(
   cookieSession({
     keys: [SESSION_SECRET],
     maxAge: 30 * 24 * 60 * 60 * 1000
   })
+// eslint-disable-next-line function-paren-newline
 )
 app.use(cookieParser())
 app.use(passport.initialize())
