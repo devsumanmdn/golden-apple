@@ -1,79 +1,113 @@
-const _ = require('lodash')
 const express = require('express')
 const bodyParser = require('body-parser')
-const User = require('./models/user')
-const { mongoose } = require('./config/config')
-const PORT = 5000
+const cookieSession = require('cookie-session')
+const cookieParser = require('cookie-parser')
+const { SESSION_SECRET } = require('./config/keys')
+const helmet = require('helmet')
+const path = require('path')
+const routes = require('./routes')
+const passport = require('passport')
+require('./config/config')
+require('./services/passport')
+
+const requireLogin = passport.authenticate('localLogin', {
+  failureRedirect: '/login'
+})
+// const requireAuthToken = passport.authenticate('jwtLogin')
+
+const PORT = process.env.PORT || 5000
 const app = express()
 
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(helmet())
 
-app.post('/api/users/signup', async (req, res) => {
-  try {
-    const body = _.pick(req.body, ['email', 'password', 'username'])
-    const user = new User(body)
-    const token = await user.save().then(() => user.generateAuthToken())
-    res.header('x-auth', token).send(user)
-  } catch (e) {
-    res.status(403).send(e)
-  }
-})
+/**
+ * Note: CookieSession middleware comes before
+ * app.use(passport.initialize)
+ * app.use(passport.session)
+ * because they use CookieSession middleware and we can't use it before
+ */
 
-app.post('/api/users/query', async (req, res) => {
-  try {
-    let { prop, value } = req.body
-    let user = await User.findOne({ [prop]: value })
-    if (!user) {
-      res.send(false)
-    } else {
-      res.send(true)
-    }
-  } catch (e) {
-    res.status(404).send('BAD REQUEST')
-  }
-})
+// eslint-disable-next-line function-paren-newline
+app.use(
+  cookieSession({
+    keys: [SESSION_SECRET],
+    maxAge: 30 * 24 * 60 * 60 * 1000
+  })
+// eslint-disable-next-line function-paren-newline
+)
+app.use(cookieParser())
+app.use(passport.initialize())
+app.use(passport.session())
 
-app.post('/api/users/login', async (req, res) => {
-  try {
-    let user
-    const body = _.pick(req.body, ['email', 'password', 'username'])
-    if (body.username) {
-      user = await User.findByCredentials(
-        'username',
-        body.username,
-        body.password
-      )
-    } else {
-      user = await User.findByCredentials('email', body.email, body.password)
-    }
-    if (user) {
-      const token = await user.generateAuthToken()
-      res
-        .header('x-auth', token)
-        .status(200)
-        .send(user)
-    } else {
-      throw false
-    }
-  } catch (e) {
-    res.status(403).send(e)
-  }
-})
+app.post(
+  '/api/users/signup',
+  routes.authRoutes.userSignup,
+  requireLogin,
+  routes.authRoutes.userSignin
+)
 
-app.get('/api/users/:userId', async (req, res) => {
-  try {
-    const { userId } = req.params
-    const user = await User.findById(userId)
-    if (!user) {
-      throw { error: 'User not fount' }
-    } else {
-      res.send(user)
-    }
-  } catch (e) {
-    res.status(404).send(e)
-  }
-})
+app.post('/api/users/query', routes.authRoutes.queryUser)
+
+app.post('/api/users/login', requireLogin, routes.authRoutes.userSignin)
+app.get('/api/logout', routes.authRoutes.signoutUser)
+app.get(
+  '/api/users/:userId',
+  routes.authRoutes.authSession,
+  routes.authRoutes.fetchUser
+)
+
+app.post(
+  '/api/store/add',
+  routes.authRoutes.authSession,
+  routes.storeRoutes.addShop
+)
+app.delete(
+  '/api/store/delete',
+  routes.authRoutes.authSession,
+  routes.storeRoutes.deleteShop
+)
+app.get('/api/stores', routes.storeRoutes.getStores)
+app.get('/api/store/:storeId', routes.storeRoutes.getSingleStore)
+app.put(
+  '/api/store/toggleVisiblity',
+  routes.authRoutes.authSession,
+  routes.storeRoutes.toggleVisiblity
+)
+
+app.get('/api/current_user', routes.authRoutes.getCurrentUser)
+
+app.get('/api/stores', routes.storeRoutes.getStores)
+
+app.get(
+  '/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+)
+app.get(
+  '/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/signup' }),
+  routes.authRoutes.authGoogleCallback
+)
+
+app.get(
+  '/auth/facebook',
+  passport.authenticate('facebook', { scope: ['email'] })
+)
+app.get(
+  '/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/signup' }),
+  routes.authRoutes.authFbCallback
+)
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('./client/build'))
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+  })
+}
 
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`App started on http://localhost:${PORT}`)
 })

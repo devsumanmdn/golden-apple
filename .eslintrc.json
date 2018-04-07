@@ -1,0 +1,18 @@
+{
+  "root": true,
+  "extends": "airbnb",
+  "rules": {
+    "semi": "off",
+    "arrow-parens": "off",
+    "comma-dangle": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "import/newline-after-import": "off",
+    "object-curly-newline": "off",
+    "consistent-return": "off",
+    "no-underscore-dangle": ["error", { "allow": ["_id"] }]
+  },
+  "env": {
+    "node": true,
+    "jest": true
+  }
+}

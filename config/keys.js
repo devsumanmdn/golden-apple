@@ -1,5 +1,7 @@
-if (process.env.NODE_ENV === "production") {
-  module.exports = require("./prod");
+if (process.env.NODE_ENV === 'production') {
+  // eslint-disable-next-line global-require
+  module.exports = require('./prod')
 } else {
-  module.exports = require("./dev");
+  // eslint-disable-next-line global-require
+  module.exports = require('./dev')
 }
