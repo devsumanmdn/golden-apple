@@ -3,3 +3,4 @@ config/dev.js
 services/services.js
 .vscode/
 *.log
+.env

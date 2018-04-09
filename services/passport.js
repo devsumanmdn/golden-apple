@@ -4,7 +4,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy
 const FacebookStrategy = require('passport-facebook')
 const { ExtractJwt } = require('passport-jwt')
 const LocalStrategy = require('passport-local')
-const keys = require('../config/keys')
+require('dotenv').config()
 const User = require('../models/user')
 
 passport.serializeUser((user, done) => {
@@ -40,7 +40,7 @@ const localLogin = new LocalStrategy(localOptions, (uid, password, done) => {
 })
 
 const jwtOptions = {
-  secretOrKey: keys.SECRET_KEY,
+  secretOrKey: process.env.SECRET_KEY,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
 }
 const jwtAuth = new JwtStrategy(jwtOptions, (payload, done) => {
@@ -63,8 +63,8 @@ const jwtAuth = new JwtStrategy(jwtOptions, (payload, done) => {
 
 const googleOAuth2 = new GoogleStrategy(
   {
-    clientID: keys.GOOGLE_CLIENT_ID,
-    clientSecret: keys.GOOGLE_CLIENT_SECRET,
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: '/auth/google/callback'
   },
   async (accessToken, refreshToken, profile, done) => {
@@ -83,8 +83,8 @@ const googleOAuth2 = new GoogleStrategy(
 
 const facebookAuth = new FacebookStrategy(
   {
-    clientID: keys.FACEBOOK_APP_ID,
-    clientSecret: keys.FACEBOOK_APP_SECRET,
+    clientID: process.env.FACEBOOK_APP_ID,
+    clientSecret: process.env.FACEBOOK_APP_SECRET,
     callbackURL: '/auth/facebook/callback',
     profileFields: ['email']
   },
