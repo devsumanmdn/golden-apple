@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
 const cookieParser = require('cookie-parser')
-const { SESSION_SECRET } = require('./config/keys')
+require('dotenv').config()
 const helmet = require('helmet')
 const path = require('path')
 const routes = require('./routes')
@@ -32,7 +32,7 @@ app.use(helmet())
 // eslint-disable-next-line function-paren-newline
 app.use(
   cookieSession({
-    keys: [SESSION_SECRET],
+    keys: [process.env.SESSION_SECRET],
     maxAge: 30 * 24 * 60 * 60 * 1000
   })
 // eslint-disable-next-line function-paren-newline
